@@ -1,0 +1,77 @@
+<h1 class="mt-3 mb-3">Hei, <span id="username"><%= username %></span>!</h1>
+<div style="max-height: 500px; overflow-y: scroll;" id="output"></div>
+
+<form id="chat-form">
+    <div class="form-group mt-3">
+        <input type="text" placeholder="Skriv beskjed..." id="text" style="border-radius:5px;padding:5px; width:94%;">
+        <input type="submit" class="btn btn-primary">
+    </div>
+    <br>
+    
+</form>
+<br>
+<p>Disse er pålogget:</p>
+<ul id="user-list">
+
+</ul>
+
+<a style="float:right;" href="/users/logout" class="btn btn-danger">Logg ut</a>
+<br><br>
+<hr>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <p>Bidra til å støtte denne web applikasjonen med en valfri kronesum på<br> Vipps til Daniel Høifødt, 48032626. Takk på forhånd.</p>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<script src="../socket.io/socket.io.js"></script>
+<script>
+const chatForm = document.getElementById("chat-form");
+let chatMessages = document.getElementById("output");
+let userList = document.getElementById("user-list");
+
+const socket = io();
+
+socket.emit("adduser", document.getElementById("username").innerText);
+
+socket.on("users", users => {
+    outputUsers(users);
+})
+socket.on("update", users => {
+    outputUsers(users);
+})
+
+socket.on("message", (message) => {
+    outputMessage(message);
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+})
+//message submit
+chatForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const msg = document.getElementById("text").value;  
+    console.log(msg);
+
+    const username = document.getElementById("username").innerText;
+    console.log(username);
+
+    socket.emit("chatMessage", username, msg);
+
+    e.target.elements.msg.value = "";
+    e.target.elements.msg.focus();
+})
+
+function outputMessage(message){
+    const div = document.createElement("div");
+    div.classList.add('message');
+    div.innerHTML = `<p style="margin-bottom:0px; background-color:lightblue; class="meta">${message.text} </p>
+    <small style="font-size:11px; margin-top:0px;" class="text">${message.username} klokken: ${message.time}</p>`;
+    document.getElementById("output").appendChild(div);
+}
+function outputUsers(users) {
+  userList.innerHTML = `
+    ${users.map(user => `<li>${user}</li>`).join('')}
+  `;
+}
+</script>

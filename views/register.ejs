@@ -1,0 +1,25 @@
+<div class="col-5 my-auto">
+        <div class="dh-login-content">
+            <h1>Kompis-chat registrer</h1>
+            <%- include ("./partials/messages") %>
+            <form action="./register" method="POST">
+                <div class="form-group">
+                    <label>Brukernavn</label>
+                    <input class="form-control" name="username" type="text">
+                </div>
+                <div class="form-group">
+                    <label>Passord</label>
+                    <input type="password" name="password" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Gjenta passord</label>
+                    <input type="password" name="password2" class="form-control">
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Send">
+                </div>
+                <p>Har du allerede en konto? <a href="./login">Login her</a>.</p>
+            </form>
+        </div>
+
+    </div>

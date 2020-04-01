@@ -1,0 +1,22 @@
+
+
+
+<div class="col-5 dh-login-content">
+    <h1>Kompis-chat login</h1>
+    <%- include ("./partials/messages") %>
+    <form action="/users/login" method="POST">
+        <div class="form-group">
+            <label>Brukernavn</label>
+            <input class="form-control" name="username" type="text">
+        </div>
+        <div class="form-group">
+            <label>Passord</label>
+            <input type="password" class="form-control" name="password">
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Login">
+        </div>
+        <p>Ikke opprettet en bruker? <a href="./register">Opprett bruker</a></p>
+    </form>
+</div>
+

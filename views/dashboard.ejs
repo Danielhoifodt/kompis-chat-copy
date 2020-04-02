@@ -9,28 +9,58 @@
     <br>
     
 </form>
-<br>
+<input type="file" id="input_file" value="Velg bilde fil">
+
+<div id="output_file" style="width:150px; height:100px; min-height:100px; display:block;">
+    <img src="" id="image_file" style="display:none; width:100%;">
+</div>
+<br><br>
+<input type="button" id="send_img" style="display:none;" value="Send">
+<br><br><br>
 <p>Disse er pålogget:</p>
 <ul id="user-list">
-
 </ul>
 
 <a style="float:right;" href="/users/logout" class="btn btn-danger">Logg ut</a>
 <br><br>
 <hr>
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-    <p>Bidra til å støtte denne web applikasjonen med en valfri kronesum på<br> Vipps til Daniel Høifødt, 48032626. Takk på forhånd.</p>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-</div>
 <script src="../socket.io/socket.io.js"></script>
 <script>
 const chatForm = document.getElementById("chat-form");
 let chatMessages = document.getElementById("output");
 let userList = document.getElementById("user-list");
+//image
+const sendImg = document.getElementById("send_img");
 
 const socket = io();
+
+let img;
+window.addEventListener('load', function() {
+  document.querySelector('input[type="file"]').addEventListener('change', function() {
+      if (this.files && this.files[0]) {
+          img = document.querySelector('img');  // $('img')[0]
+          img.src = URL.createObjectURL(this.files[0]); // set src to blob url
+          img.onload = imageIsLoaded;
+          sendImg.style.display = "block";
+          sendImg.addEventListener("click", function(){
+            let user = document.getElementById("username").innerText;
+            socket.emit("img" , user, {img:img.src});
+            let outputFile = document.getElementById("output_file");
+            outputFile.style.display="none";
+            sendImg.style.display ="none";
+          })
+          
+      }
+  });
+});
+
+function imageIsLoaded() { 
+  let img = document.querySelector('img');
+  img.style.display = "block";
+}
+socket.on("img_back", (user, img)=>{
+    outputImg(user, img);
+})
 
 socket.emit("adduser", document.getElementById("username").innerText);
 
@@ -50,11 +80,9 @@ socket.on("message", (message) => {
 chatForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const msg = document.getElementById("text").value;  
-    console.log(msg);
+    const msg = document.getElementById("text").value;
 
-    const username = document.getElementById("username").innerText;
-    console.log(username);
+    let username = document.getElementById("username").innerText;
 
     socket.emit("chatMessage", username, msg);
 
@@ -73,5 +101,12 @@ function outputUsers(users) {
   userList.innerHTML = `
     ${users.map(user => `<li>${user}</li>`).join('')}
   `;
+}
+function outputImg(user, img){
+    const div = document.createElement("div");
+    div.classList.add('message');
+    div.innerHTML = `<img style="width:300px;" src="${img.img}">
+    <small style="font-size:11px; margin-top:0px;" class="text">${user}</p>`;
+    document.getElementById("output").appendChild(div);
 }
 </script>

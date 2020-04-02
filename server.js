@@ -23,10 +23,6 @@ app.use(session({
 		saveUninitialized: true
 }))
 
-var sess = {
-	secret: 'secret',
-	cookie: {}
-  }
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
@@ -56,15 +52,23 @@ server.listen(PORT, function(){
 const io = socketio(server);
 var users = [];
 io.on('connection', socket => {
-    console.log("New WS connection");
+	console.log("New WS connection");
 
     socket.on('adduser', function(user) {
 		socket.user = user;
-        users.push(user);
-        io.emit("users", users);
-    });
+		users.push(user);
+		if(users.length > 10){
+			socket.emit("message", formatMessage("Chat-Bot", "Chatten er full!"));
+			socket.disconnect();
+		}else{
+		socket.emit("message", formatMessage("Chat-Bot", "Velkommen til chat!"));
+		io.emit("users", users);
+		}
+	});
 
-    socket.emit("message", formatMessage("Chat-Bot", "Velkommen til chat!"));
+	socket.on("img", function(user, img){
+		io.emit("img_back", user, img);
+	})
 
     socket.broadcast.emit("message", formatMessage("Chat-Bot", "En bruker har koblet til."));
 
@@ -79,10 +83,13 @@ io.on('connection', socket => {
           
         io.emit("message", formatMessage("Chat-Bot", "En bruker har koblet av."));
 
-    })
+	})
+	
     socket.on("chatMessage", (username, msg) => {
         io.emit("message", formatMessage(username, msg));
-    })
+	})
+	
+	
 })
 
 const db = require("./config/keys").MongoURI;

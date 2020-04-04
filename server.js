@@ -6,6 +6,8 @@ const flash = require('connect-flash');
 const session = require("express-session");
 const passport = require('passport');
 const formatMessage = require("./utils/messages");
+const methodOverride = require('method-override');
+const bodyParser = require("body-parser");
 
 
 var app = express();
@@ -26,6 +28,7 @@ app.use(session({
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(methodOverride('_method'));
 
 app.use(flash());
 
@@ -37,8 +40,9 @@ app.use((req, res, next) => {
 })
 
 //Bodyparser
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
-app.use(express.urlencoded({extended: false}));
 
 const PORT = process.env.PORT || 5000;
 
@@ -66,10 +70,6 @@ io.on('connection', socket => {
 		}
 	});
 
-	socket.on("img", function(user, img){
-		io.emit("img_back", user, img);
-	})
-
     socket.broadcast.emit("message", formatMessage("Chat-Bot", "En bruker har koblet til."));
 
     socket.on("disconnect", () => {
@@ -85,18 +85,13 @@ io.on('connection', socket => {
 
 	})
 	
-    socket.on("chatMessage", (username, msg) => {
-        io.emit("message", formatMessage(username, msg));
+    socket.on("chatMessage", (username, msg, files) => {
+        io.emit("message", formatMessage(username, msg, files));
 	})
 	
 	
 })
 
-const db = require("./config/keys").MongoURI;
-
-mongoose.connect(db, {useNewUrlParser:true, useUnifiedTopology: true })
-.then(()=> console.log("Mongodb connected"))
-.catch(err => console.log(err));
 
 app.use(express.urlencoded({extended:false}));
 

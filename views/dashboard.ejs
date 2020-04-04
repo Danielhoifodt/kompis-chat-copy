@@ -1,6 +1,20 @@
 <h1 class="mt-3 mb-3">Hei, <span id="username"><%= username %></span>!</h1>
-<div style="max-height: 500px; overflow-y: scroll;" id="output"></div>
-
+<div style="max-height: 500px; overflow-y: scroll;" id="output">
+</div>
+<% if(files){ %> 
+    <% files.forEach(function(file) { %>
+      <% if(file.isImage) { %>
+        <img src="image/<%= file.filename %>" alt="" style="width:120px; height:100px;">
+        <form method="POST" action="/files/<%= file._id %>?_method=DELETE">
+            <input type="submit" value="Slett">
+        </form> 
+        <% } else { %>
+            <%= file.filename %>
+        <% } %>
+    <% }); %> 
+    <% } else { %>
+        <p>Ingen bilder lastet opp</p>
+        <% } %>
 <form id="chat-form">
     <div class="form-group mt-3">
         <input type="text" placeholder="Skriv beskjed..." id="text" style="border-radius:5px;padding:5px; width:94%;">
@@ -9,7 +23,11 @@
     <br>
     
 </form>
-<input type="file" id="input_file" value="Velg bilde fil">
+<form action="/dashboard" method="POST" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <input type="submit">
+</form>
+
 
 <div id="output_file" style="width:150px; height:100px; min-height:100px; display:block;">
     <img src="" id="image_file" style="display:none; width:100%;">
@@ -20,7 +38,6 @@
 <p>Disse er pålogget:</p>
 <ul id="user-list">
 </ul>
-
 <a style="float:right;" href="/users/logout" class="btn btn-danger">Logg ut</a>
 <br><br>
 <hr>
@@ -30,37 +47,9 @@ const chatForm = document.getElementById("chat-form");
 let chatMessages = document.getElementById("output");
 let userList = document.getElementById("user-list");
 //image
-const sendImg = document.getElementById("send_img");
+
 
 const socket = io();
-
-let img;
-window.addEventListener('load', function() {
-  document.querySelector('input[type="file"]').addEventListener('change', function() {
-      if (this.files && this.files[0]) {
-          img = document.querySelector('img');  // $('img')[0]
-          img.src = URL.createObjectURL(this.files[0]); // set src to blob url
-          img.onload = imageIsLoaded;
-          sendImg.style.display = "block";
-          sendImg.addEventListener("click", function(){
-            let user = document.getElementById("username").innerText;
-            socket.emit("img" , user, {img:img.src});
-            let outputFile = document.getElementById("output_file");
-            outputFile.style.display="none";
-            sendImg.style.display ="none";
-          })
-          
-      }
-  });
-});
-
-function imageIsLoaded() { 
-  let img = document.querySelector('img');
-  img.style.display = "block";
-}
-socket.on("img_back", (user, img)=>{
-    outputImg(user, img);
-})
 
 socket.emit("adduser", document.getElementById("username").innerText);
 
@@ -96,17 +85,14 @@ function outputMessage(message){
     div.innerHTML = `<p style="margin-bottom:0px; background-color:lightblue; class="meta">${message.text} </p>
     <small style="font-size:11px; margin-top:0px;" class="text">${message.username} klokken: ${message.time}</p>`;
     document.getElementById("output").appendChild(div);
+    
 }
 function outputUsers(users) {
   userList.innerHTML = `
     ${users.map(user => `<li>${user}</li>`).join('')}
   `;
 }
-function outputImg(user, img){
-    const div = document.createElement("div");
-    div.classList.add('message');
-    div.innerHTML = `<img style="width:300px;" src="${img.img}">
-    <small style="font-size:11px; margin-top:0px;" class="text">${user}</p>`;
-    document.getElementById("output").appendChild(div);
+function del_file(id){
+    console.log(id);
 }
 </script>

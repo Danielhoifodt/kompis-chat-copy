@@ -1,0 +1,51 @@
+<% if(files){ %> 
+    <% files.forEach(function(file) { %>
+      <% if(file.isImage) { %>
+        <img src="image/<%= file.filename %>" alt="" style="width:120px; height:100px;">
+        <form method="POST" action="/files/<%= file._id %>?_method=DELETE">
+            <input type="submit" value="Slett">
+        </form> 
+        <% } else { %>
+            <%= file.filename %>
+        <% } %>
+    <% }); %> 
+    <% } else { %>
+        <p>Ingen bilder lastet opp</p>
+        <% } %>
+
+
+if(files){
+    files.forEach(function(file){
+        if(file.isImage){
+          div.innerHTML =  `<img src="/image/${file.filename}">`
+        }else{
+            return "";
+        }
+    })
+    }
+
+
+router.get("/dashboard", ensureAuthenticated, (req, res) => 
+res.render("dashboard", {
+    username : req.user.username
+}));
+
+router.get('/dashboard', (req, res) => {
+  gfs.files.find().toArray((err, files) => {
+    if (!files || files.length === 0) {
+      res.render('dashboard', { files: false });
+    } else {
+      files.map(file => {
+        if (
+          file.contentType === 'image/jpeg' ||
+          file.contentType === 'image/png'
+        ) {
+          file.isImage = true;
+        } else {
+          file.isImage = false;
+        }
+      });
+      res.render("dashboard", {files: files});
+    }
+  });
+});

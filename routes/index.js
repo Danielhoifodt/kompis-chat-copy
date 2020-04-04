@@ -8,7 +8,7 @@ const multer = require("multer");
 const GridFsStorage = require('multer-gridfs-storage');
 const Grid = require("gridfs-stream");
 const mongoURI = require("../config/keys").MongoURI;
-const methodOverride = require('method-override');
+
 
 
 // Welcome
@@ -73,7 +73,7 @@ res.render("dashboard", {
 router.get('/dashboard', (req, res) => {
   gfs.files.find().toArray((err, files) => {
     if (!files || files.length === 0) {
-      res.render('dashboard', { files: false });
+      res.render('dashboard', { files: false, username: req.user.username });
     } else {
       files.map(file => {
         if (

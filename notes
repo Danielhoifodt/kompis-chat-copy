@@ -54,3 +54,12 @@ router.get('/dashboard', (req, res) => {
     <input type="file" id="uploadfile" name="file" accept="image/x-png,image/gif,image/jpeg">
     <input type="submit" id="file-form">
 </form>
+
+Kode som kanskje funker for å skrolle helt ned med bilde:
+
+if (firstTime) {
+  container.scrollTop = container.scrollHeight;
+  firstTime = false;
+} else if (container.scrollTop + container.clientHeight === container.scrollHeight) {
+  container.scrollTop = container.scrollHeight;
+}

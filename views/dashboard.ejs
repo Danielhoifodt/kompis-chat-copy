@@ -4,17 +4,12 @@
 <form id="chat-form">
     <div class="form-group mt-3">
         <input type="text" placeholder="Skriv beskjed..." id="text" style="border-radius:5px;padding:5px; width:94%;">
-        <input type="submit" class="btn btn-primary">
+        <input type="submit" class="btn btn-primary" value="Send">
     </div>
     <br>
-    
 </form>
-
 <input type="file" id="uploadfile" name="file" accept="image/x-png,image/gif,image/jpeg">
    
-
-
-
 <div id="output_file" style="width:150px; height:100px; min-height:100px; display:block;">
     <img src="" id="image_file" style="display:none; width:100%;">
 </div>
@@ -33,16 +28,15 @@ const chatForm = document.getElementById("chat-form");
 let chatMessages = document.getElementById("output");
 let userList = document.getElementById("user-list");
 
-
 const socket = io();
-
-
 
 socket.emit("adduser", document.getElementById("username").innerText);
 
 socket.on("base64 file back", (data) =>{
     outputImage(data);
     console.log(data);
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 })
 
 socket.on("users", users => {
@@ -75,8 +69,6 @@ function readThenSendFile(data){
     };
     reader.readAsDataURL(data);
 }
-
-
 //message submit
 chatForm.addEventListener("submit", (e) => {
     e.preventDefault();

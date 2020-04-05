@@ -70,7 +70,7 @@ res.render("dashboard", {
     username : req.user.username
 })); */
 
-router.get('/dashboard', (req, res) => {
+router.get('/dashboard',ensureAuthenticated , (req, res) => {
   gfs.files.find().toArray((err, files) => {
     if (!files || files.length === 0) {
       res.render('dashboard', { files: false, username: req.user.username });

@@ -78,7 +78,8 @@ router.get('/dashboard', (req, res) => {
       files.map(file => {
         if (
           file.contentType === 'image/jpeg' ||
-          file.contentType === 'image/png'
+          file.contentType === 'image/png'  ||
+          file.contentType === 'image/gif'
         ) {
           file.isImage = true;
         } else {

@@ -1,20 +1,6 @@
 <h1 class="mt-3 mb-3">Hei, <span id="username"><%= username %></span>!</h1>
 <div style="max-height: 500px; overflow-y: scroll;" id="output">
 </div>
-<% if(files){ %> 
-    <% files.forEach(function(file) { %>
-      <% if(file.isImage) { %>
-        <img src="image/<%= file.filename %>" alt="" style="width:120px; height:100px;">
-        <form method="POST" action="/files/<%= file._id %>?_method=DELETE">
-            <input type="submit" value="Slett">
-        </form> 
-        <% } else { %>
-            <%= file.filename %>
-        <% } %>
-    <% }); %> 
-    <% } else { %>
-        <p>Ingen bilder lastet opp</p>
-        <% } %>
 <form id="chat-form">
     <div class="form-group mt-3">
         <input type="text" placeholder="Skriv beskjed..." id="text" style="border-radius:5px;padding:5px; width:94%;">
@@ -23,9 +9,9 @@
     <br>
     
 </form>
-<form action="/dashboard" method="POST" enctype="multipart/form-data">
-    <input type="file" name="file">
-    <input type="submit">
+<form action="/dashboard" method="POST" enctype="multipart/form-data"></form>
+    <input type="file" id="uploadfile" name="file" accept="image/x-png,image/gif,image/jpeg">
+    <input type="submit" id="file-form">
 </form>
 
 
@@ -46,12 +32,18 @@
 const chatForm = document.getElementById("chat-form");
 let chatMessages = document.getElementById("output");
 let userList = document.getElementById("user-list");
-//image
 
 
 const socket = io();
 
+
+
 socket.emit("adduser", document.getElementById("username").innerText);
+
+socket.on("base64 file back", (data) =>{
+    outputImage(data);
+    console.log(data);
+})
 
 socket.on("users", users => {
     outputUsers(users);
@@ -65,6 +57,26 @@ socket.on("message", (message) => {
 
     chatMessages.scrollTop = chatMessages.scrollHeight;
 })
+// image submit
+$('#uploadfile').bind('change', function(e){
+    var data = e.originalEvent.target.files[0];
+    readThenSendFile(data);    
+});
+
+function readThenSendFile(data){
+
+    var reader = new FileReader();
+    reader.onload = function(evt){
+        var msg ={};
+        msg.username = "<%= username %>";
+        msg.file = evt.target.result;
+        msg.fileName = data.name;
+        socket.emit('base64 file', msg);
+    };
+    reader.readAsDataURL(data);
+}
+
+
 //message submit
 chatForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -85,14 +97,21 @@ function outputMessage(message){
     div.innerHTML = `<p style="margin-bottom:0px; background-color:lightblue; class="meta">${message.text} </p>
     <small style="font-size:11px; margin-top:0px;" class="text">${message.username} klokken: ${message.time}</p>`;
     document.getElementById("output").appendChild(div);
-    
 }
+
+function outputImage(data){
+    const div = document.createElement("div");
+    div.classList.add('message');
+    div.innerHTML = `<p style="margin-bottom:0px; background-color:lightblue; class="meta"><img src="${data.file}" style="width:200px;"> </p>
+    <small style="font-size:11px; margin-top:0px;" class="text">${data.username} har send: ${data.fileName}</p>`;
+    document.getElementById("output").appendChild(div);
+        
+}
+
 function outputUsers(users) {
   userList.innerHTML = `
     ${users.map(user => `<li>${user}</li>`).join('')}
   `;
 }
-function del_file(id){
-    console.log(id);
-}
+
 </script>

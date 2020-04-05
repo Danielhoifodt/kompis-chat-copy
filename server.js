@@ -1,7 +1,6 @@
 const express = require("express");
 const socketio = require("socket.io");
 const expressLayouts = require("express-ejs-layouts");
-const mongoose = require("mongoose");
 const flash = require('connect-flash');
 const session = require("express-session");
 const passport = require('passport');
@@ -84,9 +83,24 @@ io.on('connection', socket => {
         io.emit("message", formatMessage("Chat-Bot", "En bruker har koblet av."));
 
 	})
+
+	socket.on('base64 file', function (msg) {
+		console.log('received base64 file from' + msg.username);
+		socket.username = msg.username;
+		// socket.broadcast.emit('base64 image', //exclude sender
+		io.sockets.emit('base64 file back',  //include sender
 	
-    socket.on("chatMessage", (username, msg, files) => {
-        io.emit("message", formatMessage(username, msg, files));
+			{
+			  username: socket.username,
+			  file: msg.file,
+			  fileName: msg.fileName
+			}
+	
+		);
+	});
+	
+    socket.on("chatMessage", (username, msg) => {
+        io.emit("message", formatMessage(username, msg));
 	})
 	
 	

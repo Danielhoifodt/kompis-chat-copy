@@ -7,6 +7,8 @@ const passport = require('passport');
 const formatMessage = require("./utils/messages");
 const methodOverride = require('method-override');
 const bodyParser = require("body-parser");
+const favicon = require('serve-favicon');
+const path = require('path');
 
 
 var app = express();
@@ -28,6 +30,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride('_method'));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.jpg')));
+app.use(express.static('public'));
 
 app.use(flash());
 

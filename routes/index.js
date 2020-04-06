@@ -52,10 +52,13 @@ const storage = new GridFsStorage({
 let upload = multer({
     storage: storage
 })
+
+// Gammel
 router.post("/dashboard", upload.single("file"), (req, res) =>{  
   //res.json({file:req.file})
   res.redirect("/dashboard");
 })
+// Gammel
 router.delete('/files/:id', (req, res) => {
   gfs.remove({ _id: req.params.id, root: 'uploads' }, (err, gridStore) => {
     if (err) {
@@ -69,7 +72,7 @@ router.delete('/files/:id', (req, res) => {
 res.render("dashboard", {
     username : req.user.username
 })); */
-
+// Gammel men username må med
 router.get('/dashboard',ensureAuthenticated , (req, res) => {
   gfs.files.find().toArray((err, files) => {
     if (!files || files.length === 0) {
@@ -91,7 +94,7 @@ router.get('/dashboard',ensureAuthenticated , (req, res) => {
   });
 });
 
-
+// Gammel
 // @route GET /files
 // @desc  Display all files in JSON
 router.get('/files', (req, res) => {
@@ -107,7 +110,7 @@ router.get('/files', (req, res) => {
     return res.json(files);
   });
 });
-
+// Gammel
 // @route GET /files/:filename
 // @desc  Display single file object
 router.get('/files/:filename', (req, res) => {
@@ -122,7 +125,7 @@ router.get('/files/:filename', (req, res) => {
     return res.json(file);
   });
 });
-
+// Gammel
 // @route GET /image/:filename
 // @desc Display Image
 router.get('/image/:filename', (req, res) => {

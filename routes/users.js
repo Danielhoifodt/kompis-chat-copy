@@ -22,7 +22,7 @@ router.post("/register", (req, res) => {
     if(password !== password2){
         errors.push({msg: "Passordene er ikke like"});
     }
-    if(password.lenght < 6){
+    if(password.length < 6){
         errors.push({msg:"Passordet må ha minst 6 tegn"});
     }
     if(errors.length > 0){

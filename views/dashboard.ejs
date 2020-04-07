@@ -1,4 +1,11 @@
-<h1 class="mt-3 mb-3">Hei, <span id="username"><%= username %></span>!</h1>
+<style>
+.message{
+    padding:0px;
+    margin:0px;
+}
+</style>
+
+<h4>Hei, <span id="username"><%= username %></span>!</h4>
 <div style="max-height: 500px; overflow-y: scroll;" id="output">
 </div>
 <form id="chat-form">
@@ -86,15 +93,15 @@ chatForm.addEventListener("submit", (e) => {
 function outputMessage(message){
     const div = document.createElement("div");
     div.classList.add('message');
-    div.innerHTML = `<p style="margin-bottom:0px; background-color:lightblue; class="meta">${message.text} </p>
-    <small style="font-size:11px; margin-top:0px;" class="text">${message.username} klokken: ${message.time}</p>`;
+    div.innerHTML = `<p style="margin-bottom:0px; font-size:12px; padding:0px; marign:0px; background-color:lightblue; class="meta">${message.text} </p>
+    <small style="font-size:10px; margin-top:0px;" class="text">${message.username} klokken: ${message.time}</p>`;
     document.getElementById("output").appendChild(div);
 }
 
 function outputImage(data){
     const div = document.createElement("div");
     div.classList.add('message');
-    div.innerHTML = `<p style="margin-bottom:0px; background-color:lightblue; class="meta"><img src="${data.file}" style="width:200px;"> </p>
+    div.innerHTML = `<p style="margin-bottom:0px; background-color:lightblue; font-size:12px; padding:0px; marign:0px; class="meta"><img src="${data.file}" style="width:200px;"> </p>
     <small style="font-size:11px; margin-top:0px;" class="text">${data.username} har send: ${data.fileName}</p>`;
     document.getElementById("output").appendChild(div);
         

@@ -16,13 +16,9 @@
     <br>
 </form>
 <input type="file" id="uploadfile" name="file" accept="image/x-png,image/gif,image/jpeg">
-   
-<div id="output_file" style="width:150px; height:100px; min-height:100px; display:block;">
-    <img src="" id="image_file" style="display:none; width:100%;">
-</div>
 <br><br>
 <input type="button" id="send_img" style="display:none;" value="Send">
-<br><br><br>
+<br>
 <p>Disse er pålogget:</p>
 <ul id="user-list">
 </ul>
@@ -93,16 +89,16 @@ chatForm.addEventListener("submit", (e) => {
 function outputMessage(message){
     const div = document.createElement("div");
     div.classList.add('message');
-    div.innerHTML = `<p style="margin-bottom:0px; font-size:12px; padding:0px; marign:0px; background-color:lightblue; class="meta">${message.text} </p>
-    <small style="font-size:10px; margin-top:0px;" class="text">${message.username} klokken: ${message.time}</p>`;
+    div.innerHTML = `<p style="margin-bottom:0px; font-size:13px; padding:0px; marign:0px; background-color:lightblue; class="meta">${message.text} </p>
+    <small style="font-size:10px;  margin:0px; padding:0px;" class="text">${message.username} klokken: ${message.time}</p>`;
     document.getElementById("output").appendChild(div);
 }
 
 function outputImage(data){
     const div = document.createElement("div");
     div.classList.add('message');
-    div.innerHTML = `<p style="margin-bottom:0px; background-color:lightblue; font-size:12px; padding:0px; marign:0px; class="meta"><img src="${data.file}" style="width:200px;"> </p>
-    <small style="font-size:11px; margin-top:0px;" class="text">${data.username} har send: ${data.fileName}</p>`;
+    div.innerHTML = `<p style=" background-color:lightblue; font-size:14px; padding:0px; marign:0px; class="meta"><img src="${data.file}" style="width:200px;"> </p>
+    <small style="font-size:11px; margin:0px; padding:0px;" class="text">${data.username} har send: ${data.fileName}</p>`;
     document.getElementById("output").appendChild(div);
         
 }

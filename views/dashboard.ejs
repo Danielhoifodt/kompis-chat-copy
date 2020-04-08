@@ -9,13 +9,17 @@
 <div style="max-height: 500px; overflow-y: scroll;" id="output">
 </div>
 <form id="chat-form">
-    <div class="form-group mt-3">
-        <input type="text" autocomplete="off" placeholder="Skriv beskjed..." id="text" style="border-radius:5px;padding:5px; width:94%;">
-        <input type="submit" class="btn btn-primary" value="Send">
+    <div class="input-group mt-3">
+        
+        <input type="text" class="form-control form-control-sm" autocomplete="off" placeholder="Skriv beskjed..." id="text" style="border-radius:5px;padding:5px; width:94%;">
+        <span class="input-group-btn">
+            <input type="submit" class="btn btn-primary btn-sm" value="Send">
+        </span>
+        
     </div>
     <br>
 </form>
-<input type="file" id="uploadfile" name="file" accept="image/x-png,image/gif,image/jpeg">
+<input type="file" id="uploadfile" class="btn btn-sm" name="file" accept="image/x-png,image/gif,image/jpeg">
 <br><br>
 <input type="button" id="send_img" style="display:none;" value="Send">
 <br>

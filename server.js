@@ -74,12 +74,6 @@ io.on('connection', socket => {
 			room: user.room,
 			users: getRoomUsers(user.room)
 		});
-
-		socket.on("base64 file", (msg) =>{
-			io.to(user.room).sockets.emit("base64 file back", {
-
-			})
-		})
 		
 	});
 
@@ -94,6 +88,15 @@ io.on('connection', socket => {
 			})
 		}
 	});
+
+	socket.on("base64 file", (msg) =>{
+		const user = getCurrentUser(socket.id);
+		io.to(user.room).emit("base64 file back", {
+			file: msg.file,
+			filename: msg.filename,
+			username: user.username
+		})
+	})
 
     socket.on("chatMessage", msg => {
 		const user = getCurrentUser(socket.id);

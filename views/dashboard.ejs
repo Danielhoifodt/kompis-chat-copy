@@ -85,7 +85,7 @@ function readThenSendFile(data){
     reader.onload = function(evt){
         var msg ={};
         msg.file = evt.target.result;
-        msg.fileName = data.name;
+        msg.filename = data.name;
         socket.emit('base64 file', msg);
     };
     reader.readAsDataURL(data);
@@ -114,7 +114,7 @@ function outputImage(data){
     const div = document.createElement("div");
     div.classList.add('message');
     div.innerHTML = `<p style=" background-color:lightblue; font-size:14px; padding:0px; marign:0px; class="meta"><img src="${data.file}" style="width:200px;"> </p>
-    <small style="font-size:11px; margin:0px; padding:0px;" class="text">${data.username} har send: ${data.fileName}</p>`;
+    <small style="font-size:11px; margin:0px; padding:0px;" class="text">${data.username} har send: ${data.filename}</p>`;
     document.getElementById("output").appendChild(div);
         
 }

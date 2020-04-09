@@ -1,10 +1,5 @@
-<style>
-.message{
-    padding:0px;
-    margin:0px;
-}
-</style>
 
+<div class="wrapper">
 <h4>Hei, <span id="username"><%= username %></span>!</h4>
 <div style="max-height: 450px; overflow-y: scroll;" id="output">
 </div>
@@ -20,21 +15,22 @@
 <br><br>
 <div class="row">
     <div class="col">
-        <p>Disse er pålogget:</p>
+        <p style="font-size:13px;">Disse er pålogget:</p>
         <ul id="user-list">
         </ul>
     </div>
     <div class="col">
-        <p>Chat rom navn:</p>
-        <p id="room-name"></p>
+        <p style="font-size:13px;">Chat rom navn:</p>
+        <p style="font-size:13px;" id="room-name"></p>
     </div>
 </div>
 
     
 
-<a style="float:right;" href="/users/logout" class="btn btn-danger">Logg ut</a>
+<a style="float:right;" href="/users/logout" class="btn btn-danger btn-sm">Logg ut</a>
 <br><br>
 <hr>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.3/qs.min.js" integrity="sha256-lSPkSu/D04IeqWOhTgTf5tLzNFEc37oNE9ysGS9PdK4=" crossorigin="anonymous"></script>
 <script src="../socket.io/socket.io.js"></script>
 <script>
@@ -113,15 +109,15 @@ function outputMessage(message){
 function outputImage(data){
     const div = document.createElement("div");
     div.classList.add('message');
-    div.innerHTML = `<p style=" background-color:lightblue; font-size:14px; padding:0px; marign:0px; class="meta"><img src="${data.file}" style="width:200px;"> </p>
-    <small style="font-size:11px; margin:0px; padding:0px;" class="text">${data.username} har send: ${data.filename}</p>`;
+    div.innerHTML = `<p style=" background-color:lightblue; font-size:13px; padding:0px; marign:0px; class="meta"><img src="${data.file}" style="width:200px;"> </p>
+    <small style="font-size:10px; margin:0px; padding:0px;" class="text">${data.username} har send: ${data.filename}</p>`;
     document.getElementById("output").appendChild(div);
         
 }
 
 function outputUsers(users) {
   userList.innerHTML = `
-    ${users.map(user => `<li>${user.username}</li>`).join('')}
+    ${users.map(user => `<li style="font-size:13px;">${user.username}</li>`).join('')}
   `;
 }
 function outputRoomName(room){

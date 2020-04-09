@@ -63,3 +63,14 @@ if (firstTime) {
 } else if (container.scrollTop + container.clientHeight === container.scrollHeight) {
   container.scrollTop = container.scrollHeight;
 }
+
+<form action="dashboard/room" mothod="get">
+        <label>Velg chat-rom:</label>
+        <select>
+            <option value="Skravle">Skravle</option>
+            <option value="Teknologi">Teknologi</option>
+            <option value="Politikk">Politikk</option>
+            <option value="Kjærlighet">Kjærlighet</option>
+            <option value="Annet">Annet</option>
+        </select>
+    </form>

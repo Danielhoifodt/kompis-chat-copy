@@ -9,6 +9,7 @@ const methodOverride = require('method-override');
 const bodyParser = require("body-parser");
 const favicon = require('serve-favicon');
 const path = require('path');
+const {userJoin, getCurrentUser, userLeave, getRoomUsers} = require("./utils/users");
 
 
 var app = express();
@@ -60,53 +61,51 @@ const io = socketio(server);
 var users = [];
 io.on('connection', socket => {
 	console.log("New WS connection");
+	socket.on("joinRoom", ({username, room}) => {
+		const user = userJoin(socket.id, username, room);
 
-    socket.on('adduser', function(user) {
-		socket.user = user;
-		users.push(user);
-		if(users.length > 10){
-			socket.emit("message", formatMessage("Chat-Bot", "Chatten er full!"));
-			socket.disconnect();
-		}else{
+		socket.join(user.room);
+		
 		socket.emit("message", formatMessage("Chat-Bot", "Velkommen til chat!"));
-		io.emit("users", users);
+		
+		socket.broadcast.to(user.room).emit("message", formatMessage("Chat-Bot", `${user.username} har koblet til.`));
+
+		io.to(user.room).emit("roomUsers", {
+			room: user.room,
+			users: getRoomUsers(user.room)
+		});
+
+		socket.on("base64 file", (msg) =>{
+			io.to(user.room).sockets.emit("base64 file back", {
+
+			})
+		})
+		
+	
+
+
+
+    
+
+    socket.on("disconnect", () => {
+		const user = userLeave(socket.id);
+		if(user){
+			io.to(user.room).emit("message", formatMessage("Chat-Bot", `${user.username} har koblet av.`));
+			
+			io.to(user.room).emit("roomUsers", {
+				room: user.room,
+				users: getRoomUsers(user.room)
+			})
 		}
 	});
 
-    socket.broadcast.emit("message", formatMessage("Chat-Bot", "En bruker har koblet til."));
 
-    socket.on("disconnect", () => {
-        
-		const index = users.indexOf(socket.user);
-		if (index > -1) {
-  		users.splice(index, 1);
-}
-		io.sockets.emit("update", users);
-        
-          
-        io.emit("message", formatMessage("Chat-Bot", "En bruker har koblet av."));
-
+	
+    socket.on("chatMessage", (msg) => {
+		const user = getCurrentUser(socket.id);
+        io.to(user.room).emit("message", formatMessage(user.username, msg));
 	})
-
-	socket.on('base64 file', function (msg) {
-		console.log('received base64 file from' + msg.username);
-		socket.username = msg.username;
-		// socket.broadcast.emit('base64 image', //exclude sender
-		io.sockets.emit('base64 file back',  //include sender
-	
-			{
-			  username: socket.username,
-			  file: msg.file,
-			  fileName: msg.fileName
-			}
-	
-		);
-	});
-	
-    socket.on("chatMessage", (username, msg) => {
-        io.emit("message", formatMessage(username, msg));
-	})
-	
+});
 	
 })
 

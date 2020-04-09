@@ -18,22 +18,47 @@
 </form>
 <input type="file" id="uploadfile" class="btn btn-sm" name="file" accept="image/x-png,image/gif,image/jpeg">
 <br><br>
-<p>Disse er pålogget:</p>
-<ul id="user-list">
-</ul>
+<div class="row">
+    <div class="col">
+        <p>Disse er pålogget:</p>
+        <ul id="user-list">
+        </ul>
+    </div>
+    <div class="col">
+        <p>Chat rom navn:</p>
+        <p id="room-name"></p>
+    </div>
+</div>
+
+    
+
 <a style="float:right;" href="/users/logout" class="btn btn-danger">Logg ut</a>
 <br><br>
 <hr>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.3/qs.min.js" integrity="sha256-lSPkSu/D04IeqWOhTgTf5tLzNFEc37oNE9ysGS9PdK4=" crossorigin="anonymous"></script>
 <script src="../socket.io/socket.io.js"></script>
 <script>
 const chatForm = document.getElementById("chat-form");
 let chatMessages = document.getElementById("output");
 let userList = document.getElementById("user-list");
+let roomName = document.getElementById("room-name");
+
+const {username, room } = Qs.parse(location.search, {
+    ignoreQueryPrefix: true
+})
 
 const socket = io();
 
-socket.emit("adduser", document.getElementById("username").innerText);
+socket.emit("joinRoom", {username, room});
 
+//get room and users
+
+socket.on("roomUsers" ,({room, users})=>{
+    outputRoomName(room);
+    outputUsers(users);
+    console.log(room, users);
+
+})
 socket.on("base64 file back", (data) =>{
     outputImage(data);
     console.log(data);
@@ -41,12 +66,7 @@ socket.on("base64 file back", (data) =>{
     chatMessages.scrollTop = chatMessages.scrollHeight;
 })
 
-socket.on("users", users => {
-    outputUsers(users);
-})
-socket.on("update", users => {
-    outputUsers(users);
-})
+
 
 socket.on("message", (message) => {
     outputMessage(message);
@@ -64,7 +84,6 @@ function readThenSendFile(data){
     var reader = new FileReader();
     reader.onload = function(evt){
         var msg ={};
-        msg.username = "<%= username %>";
         msg.file = evt.target.result;
         msg.fileName = data.name;
         socket.emit('base64 file', msg);
@@ -104,8 +123,11 @@ function outputImage(data){
 
 function outputUsers(users) {
   userList.innerHTML = `
-    ${users.map(user => `<li>${user}</li>`).join('')}
+    ${users.map(user => `<li>${user.username}</li>`).join('')}
   `;
+}
+function outputRoomName(room){
+    roomName.innerText = room;
 }
 
 </script>

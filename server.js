@@ -81,11 +81,7 @@ io.on('connection', socket => {
 			})
 		})
 		
-	
-
-
-
-    
+	});
 
     socket.on("disconnect", () => {
 		const user = userLeave(socket.id);
@@ -99,14 +95,10 @@ io.on('connection', socket => {
 		}
 	});
 
-
-	
-    socket.on("chatMessage", (msg) => {
+    socket.on("chatMessage", msg => {
 		const user = getCurrentUser(socket.id);
         io.to(user.room).emit("message", formatMessage(user.username, msg));
-	})
-});
-	
+	})	
 })
 
 

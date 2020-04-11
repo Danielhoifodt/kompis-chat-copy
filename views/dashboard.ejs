@@ -2,7 +2,7 @@
 <div class="wrapper">
 <h4>Hei, <span id="username"><%= username %></span>!</h4>
 <div style="max-height:270px; overflow-y: scroll;" id="output">
-</div>
+<div id="chat"></div>
 <form id="chat-form">
     <div class="input-group">
         <input type="text" class="form-control form-control-sm" autocomplete="off" placeholder="Skriv beskjed..." id="text">
@@ -11,6 +11,7 @@
         </span>
     </div>
 </form>
+</div>
 <input type="file" id="uploadfile" class="btn btn-sm" name="file" accept="image/x-png,image/gif,image/jpeg">
 <br><br>
 <div class="row">
@@ -100,18 +101,24 @@ chatForm.addEventListener("submit", (e) => {
 
 function outputMessage(message){
     const div = document.createElement("div");
+    const output = document.getElementById("output");
+    const chat = document.getElementById("chat");
     div.classList.add('message');
     div.innerHTML = `<p style="margin-bottom:0px; font-size:13px; padding:0px; marign:0px; background-color:lightblue; class="meta">${message.text} </p>
     <small style="font-size:10px;  margin:0px; padding:0px;" class="text">${message.username} klokken: ${message.time}</p>`;
-    document.getElementById("output").appendChild(div);
+    chat.appendChild(div);
+    output.insertBefore(chat, output.firstChild);
 }
 
 function outputImage(data){
     const div = document.createElement("div");
+    const output = document.getElementById("output");
+    const chat = document.getElementById("chat");
     div.classList.add('message');
     div.innerHTML = `<p style=" background-color:lightblue; font-size:13px; padding:0px; marign:0px; class="meta"><img src="${data.file}" style="width:200px;"> </p>
     <small style="font-size:10px; margin:0px; padding:0px;" class="text">${data.username} har send: ${data.filename}</p>`;
-    document.getElementById("output").appendChild(div);
+    chat.appendChild(div);
+    output.insertBefore(chat, output.firstChild);
         
 }
 

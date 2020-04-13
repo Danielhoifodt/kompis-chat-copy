@@ -66,10 +66,10 @@ router.post("/register", (req, res) => {
 })
 
 router.post('/login', (req, res, next) => {
-    let room = req.body.room;
+    //let room = req.body.room;
     let username = req.body.username;
     passport.authenticate('local', {
-        successRedirect: `/dashboard?username=${username}&room=${room}`,
+        successRedirect: `/dashboard?username=${username}&room=Skavle`,
         failureRedirect: '/users/login',
         failureFlash: true
     })(req, res, next);

@@ -21,14 +21,24 @@
         </ul>
     </div>
     <div class="col">
-        <p style="font-size:13px;">Chat rom navn:</p>
-        <p style="font-size:13px;" id="room-name"></p>
+        <p style="font-size:13px;">Valgt rom er: <span style="font-size:13px; margin-left:10px; font-weight:500;" id="room-name"></span></p>
+        <form id="room" action="/dashboard">
+            <input type="hidden" name="username" value="<%= username %>">
+        <select class="form-control form-control-sm" name="room" form="room">
+            <option value="Skravle">Skravle</option>
+            <option value="Teknologi">Teknologi</option>
+            <option value="Politikk">Politikk</option>
+            <option value="Kjærlighet">Kjærlighet</option>
+            <option value="Annet">Annet</option>
+        </select>
+        <input type="submit" class="btn-sm" value="Oppdater">
+        </form>
     </div>
 </div>
 
     
 
-<a style="float:right;" href="/users/logout" class="btn btn-danger btn-sm">Logg ut</a>
+<a href="/users/logout" class="btn btn-danger btn-sm">Logg ut</a>
 <br><br>
 <hr>
 </div>
@@ -40,9 +50,10 @@ let chatMessages = document.getElementById("output");
 let userList = document.getElementById("user-list");
 let roomName = document.getElementById("room-name");
 
-const {username, room } = Qs.parse(location.search, {
+
+const {username, room} = Qs.parse(location.search, {
     ignoreQueryPrefix: true
-})
+});
 
 const socket = io();
 

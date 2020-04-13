@@ -58,7 +58,7 @@ server.listen(PORT, function(){
 
 //Socet.io setup
 const io = socketio(server);
-var users = [];
+
 io.on('connection', socket => {
 	console.log("New WS connection");
 	socket.on("joinRoom", ({username, room}) => {

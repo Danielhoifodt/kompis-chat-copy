@@ -1,6 +1,32 @@
+<style>
+.welcome{
+    font-family: monospace;
+    margin-top:5px;
+    font-weight: 500;
+}
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size:13px;
+    margin-top:10px;
+    background-color: #F0F0F0;
+}
+.room-submit{
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size:13px;
+    margin-top:10px;
+    background-color: #F0F0F0;
+}
+</style>
+
 
 <div class="wrapper">
-<h4>Hei, <span id="username"><%= username %></span>!</h4>
+<h4 class="welcome">Hei, <span id="username"><%= username %></span>!</h4>
 <div style="max-height:270px; overflow-y: scroll;" id="output">
 <div id="chat"></div>
 <form id="chat-form">
@@ -12,7 +38,10 @@
     </div>
 </form>
 </div>
-<input type="file" id="uploadfile" class="btn btn-sm" name="file" accept="image/x-png,image/gif,image/jpeg">
+<label class="custom-file-upload">
+Last opp bilde
+<input type="file" id="uploadfile" style="display:none;" class="btn btn-sm" name="file" accept="image/x-png,image/gif,image/jpeg">
+</label>
 <br><br>
 <div class="row">
     <div class="col">
@@ -31,7 +60,7 @@
             <option value="Kjærlighet">Kjærlighet</option>
             <option value="Annet">Annet</option>
         </select>
-        <input type="submit" class="btn-sm" value="Oppdater">
+        <input type="submit" class="room-submit" value="Oppdater">
         </form>
     </div>
 </div>
@@ -115,7 +144,7 @@ function outputMessage(message){
     const output = document.getElementById("output");
     const chat = document.getElementById("chat");
     div.classList.add('message');
-    div.innerHTML = `<p style="margin-bottom:0px; font-size:13px; padding:0px; marign:0px; background-color:lightblue; class="meta">${message.text} </p>
+    div.innerHTML = `<p style="margin-bottom:0px; font-size:13px; padding:4px;  marign:0px; background-color:#F0F0F0; class="meta">${message.text} </p>
     <small style="font-size:10px;  margin:0px; padding:0px;" class="text">${message.username} klokken: ${message.time}</p>`;
     chat.appendChild(div);
     output.insertBefore(chat, output.firstChild);
@@ -126,7 +155,7 @@ function outputImage(data){
     const output = document.getElementById("output");
     const chat = document.getElementById("chat");
     div.classList.add('message');
-    div.innerHTML = `<p style=" background-color:lightblue; font-size:13px; padding:0px; marign:0px; class="meta"><img src="${data.file}" style="width:200px;"> </p>
+    div.innerHTML = `<p style=" background-color:#F0F0F0; font-size:13px; padding:4px; marign:0px; class="meta"><img src="${data.file}" style="width:200px;"> </p>
     <small style="font-size:10px; margin:0px; padding:0px;" class="text">${data.username} har send: ${data.filename}</p>`;
     chat.appendChild(div);
     output.insertBefore(chat, output.firstChild);
@@ -135,7 +164,7 @@ function outputImage(data){
 
 function outputUsers(users) {
   userList.innerHTML = `
-    ${users.map(user => `<li style="font-size:13px;">${user.username}</li>`).join('')}
+    ${users.map(user => `<li style="font-size:13px; font-weight:500;">${user.username}</li>`).join('')}
   `;
 }
 function outputRoomName(room){
